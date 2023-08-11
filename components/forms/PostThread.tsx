@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,8 +17,6 @@ import * as z from "zod";
 import { usePathname, useRouter } from "next/navigation";
 import { ThreadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
-
-// import { updateUser } from "@/lib/actions/user.actions";
 
 type Props = {
   user: {
