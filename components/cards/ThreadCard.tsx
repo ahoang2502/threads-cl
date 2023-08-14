@@ -2,6 +2,7 @@ import { formatDateString } from "@/lib/utils";
 
 import Image from "next/image";
 import Link from "next/link";
+import DeleteThread from "../forms/DeleteThread";
 
 interface Props {
   id: string;
@@ -19,7 +20,7 @@ interface Props {
     image: string;
   } | null;
   createdAt: string;
-  comments: {
+ children: {
     author: {
       image: string;
     };
@@ -35,9 +36,12 @@ const ThreadCard = ({
   author,
   community,
   createdAt,
-  comments,
+  children,
   isComment,
 }: Props) => {
+
+
+
   return (
     <article
       className={`flex w-full flex-col rounded-xl ${
@@ -106,17 +110,46 @@ const ThreadCard = ({
                 />
               </div>
 
-              {isComment && comments?.length > 0 && (
+              {isComment && children?.length > 0 && (
                 <Link href={`/thread/${id}`}>
                   <p className="mt-1 text-subtle-medium text-gray-1">
-                    {comments.length} replies
+                    {children.length} replies
                   </p>
                 </Link>
               )}
             </div>
           </div>
         </div>
+        <DeleteThread
+          threadId={JSON.stringify(id)}
+          currentUserId={currentUserId}
+          authorId={author.id}
+          parentId={parentId}
+          isComment={isComment}
+        />
       </div>
+
+      {!isComment && children?.length > 0 && (
+        <div className="ml-1 mt-3 flex items-center gap-2">
+          {children.slice(0, 2).map((comment, index) => (
+            <Image
+              key={index}
+              src={comment.author.image}
+              alt={`user_${index}`}
+              width={24}
+              height={24}
+              className={`${index !== 0 && "-ml-5"} rounded-full object-cover`}
+            />
+          ))}
+
+          <Link href={`/thread/${id}`}>
+            <p className="mt-1 text-subtle-medium text-gray-1">
+              {children.length} repl{children.length > 1 ? "ies" : "y"}
+            </p>
+          </Link>
+        </div>
+      )}
+
       {!community && (
         <div className="mt-5 flex items-center">
           <p className="text-subtle-medium text-gray-1">
@@ -125,8 +158,6 @@ const ThreadCard = ({
         </div>
       )}
 
-      {/* DELETE THREAD */}
-      {/* show comment logo */}
 
       {!isComment && community && (
         <Link
